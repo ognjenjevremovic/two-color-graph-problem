@@ -43,7 +43,7 @@ $ npm run start -- --port=4000
 
 :white_check_mark: Write setup instructions
 
-:black_square_button: Write unit tests, covering the `two-colored-graph` implementation
+:white_check_mark: Write unit tests, covering the `two-colored-graph` implementation
 
 :black_square_button: Provide a production (optimized) build
 

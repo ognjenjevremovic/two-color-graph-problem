@@ -43,7 +43,7 @@ export function checkIfGraphIsTwoColored(input) {
   }
 
   //  Check if the input is provided
-  if (!input) {
+  if (!input || typeof input !== 'string' || !input.trim()) {
     throw new Error('Invalid parameter passed. Input must be string and can not be empty.');
   }
 
