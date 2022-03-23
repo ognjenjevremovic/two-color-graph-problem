@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "JavaScript implementation of an algorithm for checking the coloring of the nodes of the undirected graph, in such a way that no two adjacent nodes have the same color.",
   "scripts": {
-    "start": "live-server ."
+    "start": "live-server .",
+    "test": "tap two-colored-graph.spec.js"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,7 @@
     "javascript",
     "two color graph problem"
   ],
+  "type": "module",
   "author": "Ognjen Jevremovic<jevremovic.ognjen@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/ognjenjevremovic/two-color-graph-problem#readme",
   "devDependencies": {
-    "live-server": "^1.1.0"
+    "live-server": "^1.1.0",
+    "tap": "^16.0.1"
   }
 }
