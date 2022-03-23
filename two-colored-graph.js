@@ -1,19 +1,10 @@
 /**
- * These are the provided test cases, that mimmick
- * the user input from the UI text element.
+ * @author  Ognjen Jevremovic<jevremovic.ognjen@gmail.com>
+ * @date    23/03/2022
+ * 
+ * JavaScript implementation of an algorithm for checking
+ * if a graph is a connected, red-blue colorable graph.
  */
-//  Simple connected graph (tree), valid
-const testInput_one = 'a - b - c';
-//  Disconnected graph, invalid
-const testInput_two = 'a - b, f - g';
-//  Connected graph, invalid
-const testInput_three = 'a - b - c - a';
-//  Complex connected graph, valid
-const testInput_four = 'a - b, c - d, b - c, a - d';
-//  Circular graph, invalid
-const testInput_five = 'a - a, b - c, c - c, c - a';
-//  Single node circular graph, invalid
-const testInput_six = 'a - a';
 
 
 /**
@@ -24,7 +15,7 @@ const testInput_six = 'a - a';
  * @param     {string} input - string representation of the graph
  * @returns   {boolean}
  */
-function checkGraph(input) {
+export function checkIfGraphIsTwoColored(input) {
   /**
    * @typedef   {object}  Colors
    * @property  {string}  RED
@@ -51,15 +42,23 @@ function checkGraph(input) {
     GREEN: 'green',
   }
 
-  // TODO: Do some initial validation of an input
+  //  Check if the input is provided
+  if (!input) {
+    throw new Error('Invalid parameter passed. Input must be string and can not be empty.');
+  }
 
-  //  Cover the case of both:
-  //    - Connected graphs,
-  //    - Disconnected graphs.
-  const paths = getGraphs(input).map(graph => getPathsFromInput(graph)).flat();
+  /**
+   * @type {Array.<string[]>} - Matrix containing, unique node paths between (undirected) graph nodes
+   */
+  const paths = getPathsFromInput(input);
+  /**
+   * @type {string[]} - List of all the nodes, contained from within the graph
+   */
   const nodes = getNodesFromInput(input);
 
-  //  Represent the graph in an adjecency list
+  /**
+   * @type {Map<string, NodeWithColorAndNeighbours>} - Graph representation in form of adjecency list
+   */
   const graph = constructGraph(nodes, paths);
 
   //  Check if graph is red-green colorable
@@ -82,11 +81,11 @@ function checkGraph(input) {
    * @description
    *  Provided a string representation of the graph
    *  return an Array of strings.
-   *  Each element of an array is a string,
+   *  Each element in an array is a string,
    *  representing a graph path containing nodes and edges.
    * 
    * @private
-   * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
+   * @param     {string} graphString - string representation of the undirected graph, with nodes and edges
    *
    * @returns   {string[]}
    */
@@ -100,21 +99,25 @@ function checkGraph(input) {
    *  Find the graph's neighbouring nodes (with unique paths), through paths / edges.
    * 
    * @private
-   * @param     {string[]} graphs - string array representation of undirected graph  
+   * @param     {string} graphString - string representation of the undirected graph, with nodes and edges
    *
    * @returns   {Array.<string[]>}
    */
-  function getPathsFromInput(graphsArray) {
-    return graphsArray.replace(/\s/g, '').split('-')
-      .reduce((edges, node, idx, originalGraphArray) => {
-        const neighbourNode = originalGraphArray[idx + 1];
+  function getPathsFromInput(graphString) {
+    return getGraphs(graphString)
+      .map(graph => graph.replace(/\s/g, '')
+        .split('-')
+        .reduce((edges, node, idx, originalGraphArray) => {
+          const neighbourNode = originalGraphArray[idx + 1];
 
-        if (!!neighbourNode) {
-          edges = [...edges, [node, neighbourNode]];
-        }
+          if (!!neighbourNode) {
+            edges = [...edges, [node, neighbourNode]];
+          }
 
-        return edges;
-      }, [])
+          return edges;
+        }, [])
+      )
+      .flat();
   }
 
 
@@ -123,12 +126,12 @@ function checkGraph(input) {
    *  Extract all of the graph's nodes.
    * 
    * @private
-   * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
+   * @param     {string} graphString - string representation of the undirected graph, with nodes and edges
    *
    * @returns   {string[]}
    */
   function getNodesFromInput(graphString) {
-    return graphString.replace(/\s/g, '').split(',')
+    return getGraphs(graphString)
       .map(val => val.split('-'))
       .flat()
       .filter((val, idx, arr) => arr.indexOf(val) === idx)
@@ -145,15 +148,28 @@ function checkGraph(input) {
    */
   function constructGraph(nodes, paths) {
     //  Create adjancency list, used for storing the graph
-    //  and data manipulation in O(n) time complexity.
+    //  and node / edge manipulation in O(n) time complexity.
     const adjacencyList = new Map();
 
-    // Add node to the adjancency list
+    /**
+     * @description
+     *  Add the graph node, to the adjencency list.
+     * 
+     * @param {string} node - node from within the graph
+     */
     function addNode(node) {
       adjacencyList.set(node, { neighbours: [], color: null });
     }
 
-    //  Add edge(s) in adjancency list (undirected)
+    /**
+     * @description
+     *  Add the graph edges, to the adjencency list.
+     *  Each node will have a list of neighbours
+     *  representing the edges of the graph.
+     * 
+     * @param {string} origin - node from within the graph, found on one end of the edge
+     * @param {string} destination - node from within the graph, found on the other end of the edge
+     */
     function addEdge(origin, destination) {
       adjacencyList.get(origin).neighbours.push(destination);
       adjacencyList.get(destination).neighbours.push(origin);
@@ -182,14 +198,16 @@ function checkGraph(input) {
 
     //  Keep track of all visited nodes
     const visited = new Set();
-    //  Create the que for bfs algorithm
+    //  Create the que for the bfs algorithm
     const queue = [startingNode];
 
     //  Initialize the color on first node
     adjacencyList.get(startingNode).color = startWithColor;
 
     while (!!queue.length) {
+      //  Dequeue the next node from the start of queue
       const node = queue.shift();
+      //  Get node's neighbours and its' current color
       const { neighbours, color } = adjacencyList.get(node);
 
       for (const neighbour of neighbours) {
@@ -205,7 +223,12 @@ function checkGraph(input) {
         }
 
         if (!visited.has(neighbour)) {
+          //  Keep track of visited nodes,
+          //  as every node in the undirected graph contains paths both ways.
+          //  (to it's neighbours on the left and right).
+          //  We only want to traverse each node once.
           visited.add(node, neighbour);
+          //  Enqueue the neighbour node to the que. 
           queue.push(neighbour);
         }
       }
@@ -214,13 +237,3 @@ function checkGraph(input) {
     return true;
   }
 }
-
-
-//  Some use-case development / test scenarions, for checking the solution
-
-console.log('should pass | yield "true" - ', checkGraph(testInput_one));
-console.log('should NOT pass | yield "false" - ', checkGraph(testInput_two));
-console.log('should NOT pass | yield "false" - ', checkGraph(testInput_three));
-console.log('should pass | yield "true" - ', checkGraph(testInput_four));
-console.log('should NOT pass | yield "false" - ', checkGraph(testInput_five));
-console.log('should NOT pass | yield "false" - ', checkGraph(testInput_six));
