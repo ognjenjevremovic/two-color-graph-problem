@@ -1,0 +1,28 @@
+{
+  "name": "two-color-graph-problem",
+  "version": "0.0.1",
+  "description": "JavaScript implementation of an algorithm for checking the coloring of the nodes of the undirected graph, in such a way that no two adjacent nodes have the same color.",
+  "scripts": {
+    "start": "live-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ognjenjevremovic/two-color-graph-problem.git"
+  },
+  "keywords": [
+    "graph",
+    "bfs",
+    "breadth first search",
+    "javascript",
+    "two color graph problem"
+  ],
+  "author": "Ognjen Jevremovic<jevremovic.ognjen@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ognjenjevremovic/two-color-graph-problem/issues"
+  },
+  "homepage": "https://github.com/ognjenjevremovic/two-color-graph-problem#readme",
+  "devDependencies": {
+    "live-server": "^1.1.0"
+  }
+}

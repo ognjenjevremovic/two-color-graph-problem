@@ -14,13 +14,40 @@ From Wikipedia - [Connected graph](<https://en.wikipedia.org/wiki/Connectivity_(
 
 A graph is said to be connected if every pair of vertices in the graph is connected. This means that there is a path between every pair of vertices. An undirected graph that is not connected is called disconnected. An undirected graph G is therefore disconnected if there exist two vertices in G such that no path in G has these vertices as endpoints. A graph with just one vertex is connected. An edgeless graph with two or more vertices is disconnected.
 
+## Requirements
+
+- **Node.JS** - >=_v14.x_ or above (tested with v14.17.3, although versions matching _>=0.10.0_ should be fine)
+- **npm** - >=_v7.x_ or above (tested with with v8.5.4, although versions supporting _package-lock.json_ file should be fine)
+
 ## Installation
 
-TODO: Installation instructions
+```sh
+$ npm ci
+```
 
 ## Usage
 
-TODO: Usage instructions
+For running the application locally, on the default port _8080_:
+
+```sh
+$ npm run start
+```
+
+If you would like to specify a different port, pass the `port` flag to the command:
+
+```sh
+$ npm run start -- --port=4000
+```
+
+## Further improvements
+
+:white_check_mark: Write setup instructions
+
+:black_square_button: Write unit tests, covering the `two-colored-graph` implementation
+
+:black_square_button: Provide a production (optimized) build
+
+:black_square_button: Write UI test
 
 ## License
 
