@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    Include TailwindCSS (from CDN) for styling.
+    CDN script is included only as for the demo and is not critical for application to work.
+    It is very unoptimized and instead, for any production deployment
+    a build pipeline is recommended, in order to purge any of the unused styles
+    and reduce the number of bytes transfered when running the application.
+  -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Document</title>
+</head>
+    <body class="leading-normal h-screen w-screen tracking-normal bg-gray-50 max-w-[800px] mx-auto text-lg md:text-xl lg:max-w-[1200px]">
+      <div class="h-full w-full mx-auto flex flex-wrap flex-col items-center justify-around lg:flex-row lg:space-x-4">
+
+        <!-- Input side -->
+        <div class="w-3/4 space-y-4 md:w-2/3 lg:w-5/12">
+          <label class="block mb-2 font-medium text-gray-900">
+            Input the graph (with nodes and connections)
+          </label>
+          <input type="text" class="border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 max-w-lg
+            graph-input
+            focus:ring-blue-500 focus:border-blue-500
+            dark:bg-gray-100
+            dark:border-gray-500
+            dark:placeholder-gray-400
+            dark:text-gray-900
+            dark:focus:ring-blue-500
+            dark:focus:border-blue-500" placeholder="ex: a - b - c" required>
+        </div>
+
+        <!-- Solution placeholder -->
+        <div class="w-3/4 space-y-4 md:w-2/3 lg:w-5/12 text-center text-2xl solution">
+          <!--
+            DOM Node populated dynamically, based on the result yielded from the algorithm
+            Uses template.solution-template, for dynamic rendering content.
+          -->
+        </div>
+
+        <template class="solution-template">
+          <p>Input graph: <code class="input-graph italic ml-4"></code></p>
+          <p class="font-bold"><span class="is-colorable-graph"></span> red-green colorable graph</p>
+        </template>
+
+        <script src="./browser.js"></script>
+    </body>
+</html>
