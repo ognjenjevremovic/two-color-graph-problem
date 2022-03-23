@@ -4,13 +4,13 @@
  */
 //  Simple connected graph (tree), valid
 const testInput_one = 'a - b - c';
-//  Multiple unconnected graphs, invalid
+//  Disconnected graph, invalid
 const testInput_two = 'a - b, f - g';
-//  Single connected graph, invalid
+//  Connected graph, invalid
 const testInput_three = 'a - b - c - a';
-//  Multiple connected graphs, valid
+//  Complex connected graph, valid
 const testInput_four = 'a - b, c - d, b - c, a - d';
-//  Single circular graph, invalid
+//  Circular graph, invalid
 const testInput_five = 'a - a, b - c, c - c, c - a';
 //  Single node circular graph, invalid
 const testInput_six = 'a - a';
@@ -21,21 +21,23 @@ const testInput_six = 'a - a';
  *  Check if a graph is red-blue colorable.
  * 
  * @public
- * @param     {string} input - string representation of the graph(s)
+ * @param     {string} input - string representation of the graph
  * @returns   {boolean}
  */
 function checkGraph(input) {
   // TODO: Do some initial validation of an input
 
-
   //  Cover the case of both:
-  //    - Single graphs,
-  //    - Multiple graphs.
+  //    - Connected graphs,
+  //    - Disconnected graphs.
   const paths = getGraphs(input).map(graph => getPathsFromInput(graph)).flat();
   const nodes = getNodesFromInput(input);
 
-  console.log('paths', paths);
-  console.log('nodes', nodes);
+  //  Represent the graph in an adjecency list
+  const graph = constructGraph(nodes, paths);
+
+  //  TODO: Check if graph is a connected graph
+  //  TODO: Check if graph is blue-red colorable.
 
   //  TODO: Implementation details
   return false;
@@ -43,9 +45,10 @@ function checkGraph(input) {
 
   /**
    * @details
-   *  Provided a string representation of the graph(s)
+   *  Provided a string representation of the graph
    *  return an Array of strings.
-   *  Each element of an array, represents a graph with nodes and edges.
+   *  Each element of an array is a string,
+   *  representing a graph path containing nodes and edges.
    * 
    * @private
    * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
@@ -58,10 +61,10 @@ function checkGraph(input) {
 
   /**
    * @details
-   *  Find the graph's neighbouring nodes, through paths / edges.
+   *  Find the graph's neighbouring nodes (paths), through paths / edges.
    * 
    * @private
-   * @param     {string[]} graphs - string array representation of undirected graph(s)  
+   * @param     {string[]} graphs - string array representation of undirected graph  
    * @returns   {Array.<string[]>}
    */
   function getPathsFromInput(graphsArray) {
@@ -80,7 +83,7 @@ function checkGraph(input) {
 
   /**
    * @details
-   *  Extract the graph nodes, from the string representation of the graph(s).
+   *  Extract all of the graph's nodes.
    * 
    * @private
    * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
@@ -91,6 +94,30 @@ function checkGraph(input) {
       .map(val => val.split('-'))
       .flat()
       .filter((val, idx, arr) => arr.indexOf(val) === idx)
+  }
+
+  function constructGraph(nodes, paths) {
+    //  Create adjancency list, used for storing the graph
+    //  and data manipulation in O(n) time complexity.
+    const adjacencyList = new Map();
+
+    // Add node to the adjancency list
+    function addNode(node) {
+      adjacencyList.set(node, { neighbours: [], color: null });
+    }
+
+    //  Add edge(s) in adjancency list (undirected)
+    function addEdge(origin, destination) {
+      adjacencyList.get(origin).neighbours.push(destination);
+      adjacencyList.get(destination).neighbours.push(origin);
+    }
+
+    //  Construct the Graph with nodes and edges
+    //  and represent it in an ajdecency list.
+    nodes.forEach(addNode);
+    paths.forEach(path => addEdge(...path));
+
+    return adjacencyList;
   }
 }
 
