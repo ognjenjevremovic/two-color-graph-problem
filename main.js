@@ -17,14 +17,40 @@ const testInput_six = 'a - a';
 
 
 /**
- * @details
- *  Check if a graph is red-blue colorable.
+ * @description
+ *  Check if a graph is red-green colorable.
  * 
  * @public
  * @param     {string} input - string representation of the graph
  * @returns   {boolean}
  */
 function checkGraph(input) {
+  /**
+   * @typedef   {object}  Colors
+   * @property  {string}  RED
+   * @property  {string}  GREEN
+   */
+  /**
+   * @typedef   {Object}        NodeWithColorAndNeighbours
+   * @property  {string[]}      neighbours  - list of neighbour nodes
+   * @property  {string|null}   color       - current node color
+  */
+
+
+  /**
+ * @description
+ *  Enum type used for storing the two different colors,
+ *  used to paint nodes in the graph.
+ * 
+ * @private
+ * @readonly
+ * @enum {Colors}
+ */
+  const colors = {
+    RED: 'red',
+    GREEN: 'green',
+  }
+
   // TODO: Do some initial validation of an input
 
   //  Cover the case of both:
@@ -36,15 +62,24 @@ function checkGraph(input) {
   //  Represent the graph in an adjecency list
   const graph = constructGraph(nodes, paths);
 
-  //  TODO: Check if graph is a connected graph
-  //  TODO: Check if graph is blue-red colorable.
+  //  Check if graph is red-green colorable
+  //  using Breadth First Search algorithm
+  let isTwoColoredGraph = bfs(graph, nodes[0], colors.RED);
 
-  //  TODO: Implementation details
-  return false;
+  //  If graph is valid two-colorable graph,
+  //  check if graph is a connected graph
+  if (isTwoColoredGraph) {
+    for (let value of graph.values()) {
+      isTwoColoredGraph = isTwoColoredGraph && !!value.color;
+    }
+  }
+
+  //  yield the result, matching the requirements.
+  return isTwoColoredGraph;
 
 
   /**
-   * @details
+   * @description
    *  Provided a string representation of the graph
    *  return an Array of strings.
    *  Each element of an array is a string,
@@ -52,6 +87,7 @@ function checkGraph(input) {
    * 
    * @private
    * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
+   *
    * @returns   {string[]}
    */
   function getGraphs(graphString) {
@@ -60,11 +96,12 @@ function checkGraph(input) {
 
 
   /**
-   * @details
-   *  Find the graph's neighbouring nodes (paths), through paths / edges.
+   * @description
+   *  Find the graph's neighbouring nodes (with unique paths), through paths / edges.
    * 
    * @private
    * @param     {string[]} graphs - string array representation of undirected graph  
+   *
    * @returns   {Array.<string[]>}
    */
   function getPathsFromInput(graphsArray) {
@@ -82,11 +119,12 @@ function checkGraph(input) {
 
 
   /**
-   * @details
+   * @description
    *  Extract all of the graph's nodes.
    * 
    * @private
    * @param     {string} graphString - string representation of the undirected graph, with nodes and edges. 
+   *
    * @returns   {string[]}
    */
   function getNodesFromInput(graphString) {
@@ -96,6 +134,15 @@ function checkGraph(input) {
       .filter((val, idx, arr) => arr.indexOf(val) === idx)
   }
 
+  /**
+   * @description
+   *  Construct the adjecency matrix for representing the undirected graph.
+   * 
+   * @param     {string[]} nodes - list of all the nodes in the graph
+   * @param     {Array.<string[]>} paths  - list of the graph paths, between nodes
+   * 
+   * @returns   {Map<string, NodeWithColorAndNeighbours>}
+   */
   function constructGraph(nodes, paths) {
     //  Create adjancency list, used for storing the graph
     //  and data manipulation in O(n) time complexity.
@@ -118,6 +165,53 @@ function checkGraph(input) {
     paths.forEach(path => addEdge(...path));
 
     return adjacencyList;
+  }
+
+  /**
+   * @description
+   *  Breadth first search algorithm implementation,
+   *  adapted for the two-colored graph problem.
+   * 
+   * @param   {Map<string, NodeWithColorAndNeighbours>} adjacencyList - graph representation 
+   * @param   {NodeWithColorAndNeighbours} startingNode - start breadth first search from node
+   * @param   {Colors} [startWithColor=colors.RED] - set the color for the current node from graph
+   * 
+   * @returns {boolean} 
+   */
+  function bfs(adjacencyList, startingNode, startWithColor = colors.RED) {
+
+    //  Keep track of all visited nodes
+    const visited = new Set();
+    //  Create the que for bfs algorithm
+    const queue = [startingNode];
+
+    //  Initialize the color on first node
+    adjacencyList.get(startingNode).color = startWithColor;
+
+    while (!!queue.length) {
+      const node = queue.shift();
+      const { neighbours, color } = adjacencyList.get(node);
+
+      for (const neighbour of neighbours) {
+        //  Set neighbouring node(s) color, to the opposite one
+        adjacencyList.get(neighbour).color = adjacencyList.get(neighbour).color || (
+          color === colors.RED ? colors.GREEN : colors.RED
+        );
+
+        //  If the color matches the neighbouring color
+        //  the graph is not two-colored graph.
+        if (adjacencyList.get(neighbour).color === color) {
+          return false;
+        }
+
+        if (!visited.has(neighbour)) {
+          visited.add(node, neighbour);
+          queue.push(neighbour);
+        }
+      }
+    }
+
+    return true;
   }
 }
 
