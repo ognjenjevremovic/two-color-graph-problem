@@ -47,7 +47,9 @@ $ npm run start -- --port=4000
 
 :black_square_button: Provide a production (optimized) build
 
-:black_square_button: Write UI test
+:black_square_button: Write UI tests, mocking the user interaction
+
+:black_square_button: Provide visualization of (at least one) possible solution(s)
 
 ## License
 
