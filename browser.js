@@ -45,6 +45,10 @@
      * @type {Node} - deep copy the DOM node
      */
     const solutionOutput$ = solutionTemplate$.content.cloneNode(true);
+    /**
+     * @type {boolean} - solution for the given graph, using the provided algorithm
+     */
+    let isTwoColoredGraph
 
     try {
       //  Run the algorithm

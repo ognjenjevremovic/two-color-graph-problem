@@ -47,6 +47,10 @@ export function checkIfGraphIsTwoColored(input) {
     throw new Error('Invalid parameter passed. Input must be string and can not be empty.');
   }
 
+  //  Support both new line and a comma as separators between paths
+  //  however, standardize the input to a comma for internal separation.
+  input = input.replace(/[\n|\r|\,]/gm, ',')
+
   /**
    * @type {Array.<string[]>} - Matrix containing, unique node paths between (undirected) graph nodes
    */
@@ -105,7 +109,7 @@ export function checkIfGraphIsTwoColored(input) {
    */
   function getPathsFromInput(graphString) {
     return getGraphs(graphString)
-      .map(graph => graph.replace(/\s/g, '')
+      .map(graph => graph.replace(/\s/gm, '')
         .split('-')
         .reduce((edges, node, idx, originalGraphArray) => {
           const neighbourNode = originalGraphArray[idx + 1];
