@@ -16,8 +16,8 @@ A graph is said to be connected if every pair of vertices in the graph is connec
 
 ## Requirements
 
-- **Node.JS** - >=_v14.x_ or above (tested with v14.17.3, although versions matching _>=0.10.0_ should be fine)
-- **npm** - >=_v7.x_ or above (tested with with v8.5.4, although versions supporting _package-lock.json_ file should be fine)
+- **Node.JS** >=_v14.x_ or above (tested with v14.17.3, although versions matching _>=0.10.0_ should be fine)
+- **npm** >=_v7.x_ or above (tested with with v8.5.4, although versions supporting _package-lock.json_ file should be fine)
 
 ## Installation
 
@@ -25,7 +25,7 @@ A graph is said to be connected if every pair of vertices in the graph is connec
 $ npm ci
 ```
 
-## Usage
+## Usage (runninig locally)
 
 For running the application locally, on the default port _8080_:
 
@@ -37,6 +37,14 @@ If you would like to specify a different port, pass the `port` flag to the comma
 
 ```sh
 $ npm run start -- --port=4000
+```
+
+## Tests
+
+For running the unit tests, checking the algorithm implementation:
+
+```sh
+$ npm run test
 ```
 
 ## Further improvements
